@@ -1,0 +1,10 @@
+{
+  "dependencies": {
+    "cors": "^2.8.5",
+    "create-react-app": "^5.0.1",
+    "express": "^4.18.1",
+    "mysql2": "^2.3.3",
+    "node": "^18.5.0",
+    "nodemon": "^2.0.19"
+  }
+}
