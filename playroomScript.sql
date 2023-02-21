@@ -54,3 +54,9 @@ CONSTRAINT `FK_customer_code` FOREIGN KEY (`customer_code`) REFERENCES `Customer
 KEY `FK_game_id` (`game_id`),
 CONSTRAINT `FK_game_id` FOREIGN KEY (`game_id`) REFERENCES `Games` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE
 );
+
+
+insert into playroom.games (id,name,minimalAge,maximalAge, company, id_Type,minutesDuration,existingNumber)
+values(1,'play ja',1,7,'ghj',1,15,1)
+insert into playroom.gametypes (id,name)
+values(1,'effort')
