@@ -3,9 +3,9 @@ const fanctions = {
     //Customer
     Login: (req, res) => {
         try {
-            let id = req.body.id;
+            let userName = req.body.userName;
             let password = req.body.password;
-            con.query(`select * from playroom.customers where id='${id}'and password='${password}'`, (err, result) => {
+            con.query(`select * from playroom.customers where userName='${userName}'and password='${password}'`, (err, result) => {
                 if (err)
                     res.status(400).send("The data is incorrect")
                 else {
@@ -25,9 +25,9 @@ const fanctions = {
     },
     Signin: (req, res) => {
         try {
-            let { id, password, name, city, phone, gamesNumber } = req.body;
-            var sql = `insert into playroom.customers values(null,'${id}','${password}','${name}','
-            ${city}','${phone}',${gamesNumber},0,1);`
+            let { userName, password, name, city, PhoneNumber, gamesNumber } = req.body;
+            var sql = `insert into playroom.customers values(null,'${password}','${name}','
+            ${city}','${PhoneNumber}',${gamesNumber},0,1, '${userName}');`
             con.query(sql, (err, result) => {
                 debugger;
                 if (err)
@@ -47,9 +47,9 @@ const fanctions = {
             var sql = `select bg.*,  g.name
             from playroom.borrowedgame bg 
             join playroom.customers c
-            on bg.customer_code=c.code
+            on bg.customerId=c.id
             join playroom.games g
-            on bg.game_id=g.id
+            on bg.gameId=g.id
             where c.id='${id}' and bg.status=0`;
             con.query(sql, (err, result) => {
                 if (err) {
@@ -67,8 +67,8 @@ const fanctions = {
     //updating the customer's deatils
     UpdateCustomer: (req, res) => {
         try {
-            const { name, city, phone, gamesNumber, id } = req.body;
-            var sql = `update playroom.customers set name='${name}', city='${city}', phone='${phone}',gamesNumber=${gamesNumber}
+            const { name, city, PhoneNumber, gamesNumber, id } = req.body;
+            var sql = `update playroom.customers set name='${name}', city='${city}', PhoneNumber='${PhoneNumber}',gamesNumber=${gamesNumber}
             where id='${id}'`
             con.query(sql, (err, result) => {
                 if (err)
@@ -82,9 +82,8 @@ const fanctions = {
     },
     DisableCustomer: (req, res) => {
         try {
-            const { id } = req.body;
-            var sql = `update playroom.customers set status=1
-            where id='${id}'`;
+            const id  = req.body.Id;
+            var sql = `update playroom.customers set status=1 where id='${id}'`;
             let sql2 = `select * from playroom.customers where id='${id}'`;
             con.query(sql, (err, result) => {
                 if (err)
@@ -127,14 +126,14 @@ const fanctions = {
     KnowGame: (req, res) => {
         try {
             let gameid = req.params.id;
-            let code = req.params.code;
-            var sql = `select game_id
+            let id = req.params.customerId;
+            var sql = `select gameId
             from (select bg.*
             from playroom.customers c
             join playroom.borrowedgame bg
-            on bg.customer_code=c.code
-            where customer_code=${code}) as PastGames
-            where game_id=${gameid}`
+            on bg.customerId=c.id
+            where customerId=${id}) as PastGames
+            where gameId=${gameid}`
             con.query(sql, (err, result) => {
                 if (err)
                     res.status(400).send("we have a problem with the data");
@@ -152,7 +151,7 @@ const fanctions = {
             where id not in (select distinct c.id
             from playroom.customers c
             join playroom.borrowedgame bg
-            on c.code=bg.customer_code) and id_type=1`
+            on c.id=bg.customerId) and CustomerTypeId=1`
             con.query(sql, (err, result) => {
                 if (err)
                     res.status(400).send(err);
@@ -165,7 +164,7 @@ const fanctions = {
     },
     AllCustomers: (req, res) => {
         try {
-            var sql = `select * from playroom.customers where id_Type=1`
+            var sql = `select * from playroom.customers where CustomerTypeId=1`
             con.query(sql, (err, result) => {
                 if (err)
                     res.status(400).send(err);
@@ -200,7 +199,7 @@ const fanctions = {
             where c.gamesNumber> (select count(*)
             from playroom.customers c
             join playroom.borrowedgame bg
-            on c.code=bg.customer_code
+            on c.id=bg.customerId
             where c.id='${id}' and bg.status=0)
             and c.id='${id}'`
             con.query(sql, (err, result) => {
