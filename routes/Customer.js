@@ -12,7 +12,7 @@ router.get('/findbyid/:id', qCustomer.FindByID);
 router.put('/updateDetails', qCustomer.UpdateCustomer);
 router.put('/disabledCustomer', qCustomer.DisableCustomer);
 router.put('/ableCustomer', qCustomer.AbleCustomer);
-router.get('/knowgame/:id/:code', qCustomer.KnowGame);
+router.get('/knowgame/:id/:customerId', qCustomer.KnowGame);
 router.use('/borrow', require('./BorrowGame'));
 router.use('/return',require('./BorrowGame'));
 router.use('/games',require('./Games'));
